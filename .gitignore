@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 /.pnp
+/live-coding-backend/node_modules
 .pnp.js
 
 # testing
