@@ -14,7 +14,19 @@ app.get('/getSessionURL', (req, res) => {
 
     socketsArray.push(URL)
 
+    const newSocket = io.of(URL)
+    newSocket.on('connection', (socket) => {
+        console.log('Someone connected with socket id: ', socket.id)
 
+        socket.on('SEND_MESSAGE', (data) => {
+            socket.broadcast.emit('RECEIVE_MESSAGE', data)
+        })
+
+        socket.on('CHANGED_LANGUAGE', (data) => {
+            socket.broadcast.emit('RECEIVE_CHANGED_LANGUAGE', data)
+        })
+    })
+    res.send({ url })
 })
 
 server = app.listen(PORT, () => {
