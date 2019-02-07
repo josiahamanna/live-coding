@@ -10,11 +10,11 @@ app.use(cors())
 const socketsArray = []
 
 app.get('/getSessionURL', (req, res) => {
-    const URL = Math.random().toString(36).substring(2)
+    const url = Math.random().toString(36).substring(2)
 
-    socketsArray.push(URL)
+    socketsArray.push(url)
 
-    const newSocket = io.of(URL)
+    const newSocket = io.of(url)
     newSocket.on('connection', (socket) => {
         console.log('Someone connected with socket id: ', socket.id)
 
@@ -29,10 +29,17 @@ app.get('/getSessionURL', (req, res) => {
     res.send({ url })
 })
 
+app.get('/checkSocketExists', (req, res) => {
+    if (socketsArray.includes(req.query.url)) {
+        res.send({ isSocketPresent: true })
+    } else {
+        res.send({ isSocketPresent: false })
+    }
+})
+
 server = app.listen(PORT, () => {
 
-    io = socket(sever)
+    io = socket(server)
     console.log('Server started, listening to port ', PORT)
-
 })
 
