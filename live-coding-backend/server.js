@@ -7,17 +7,12 @@ const socket = require('socket.io')
 const cors = require('cors')
 app.use(cors())
 
-const socketsArray = []
-
 /*
 	This function will genearte a random string and send that string to the client. The function will create a new socket namespace with the randomly generated string as its name.
 */
 app.get('/getSessionURL', (req, res) => {
     // Generate a random string which will be used for socket namespace. 
     const url = Math.random().toString(36).substring(2)
-
-    // Keep track of all the socket namespaces taht are generated.
-    socketsArray.push(url)
 
     // Create a new socket namespace
     const newSocket = io.of(url)
@@ -31,7 +26,7 @@ app.get('/getSessionURL', (req, res) => {
 
         // Event listener to listen to client if they changed the language settings.
         socket.on('CHANGED_LANGUAGE', (data) => {
-            socket.broadcast.emit('RECEIVE_CHANGED_LANGUAGE', data)
+            socket.broadcast.emit('RECEIVE_NEW_LANGUAGE', data)
         })
 
         // Event listener to listen to request when the user is going to leave the session.
@@ -50,8 +45,11 @@ app.get('/getSessionURL', (req, res) => {
     res.send({ url })
 })
 
+// check whether the socket namespace user want to connect exist or not
 app.get('/checkSocketExists', (req, res) => {
-    if (socketsArray.includes(req.query.url)) {
+    const socketsArray = Object.keys(io.nsps)
+
+    if (socketsArray.includes('/' + req.query.url)) {
         res.send({ isSocketPresent: true })
     } else {
         res.send({ isSocketPresent: false })
