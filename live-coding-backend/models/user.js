@@ -1,9 +1,10 @@
-const mongoose = require('moongoose')
-const { Schema } = mongoose.Schema
+const mongoose = require('mongoose')
+const { Schema } = mongoose
 
 const bcrypt = require('bcryptjs')
 
 mongoose.Pormise = global.Promise
+
 
 const userSchema = new Schema({
     name: {

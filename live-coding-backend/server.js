@@ -1,11 +1,18 @@
 const express = require('express')
 const app = express()
+
+require('./config/db-config')
+
 const { PORT } = require('./config/config')
+const { userRouter } = require('./controllers/users')
 
 const socket = require('socket.io')
 
 const cors = require('cors')
 app.use(cors())
+app.use(express.json())
+
+app.use('/users', userRouter)
 
 /*
 	This function will genearte a random string and send that string to the client. The function will create a new socket namespace with the randomly generated string as its name.
