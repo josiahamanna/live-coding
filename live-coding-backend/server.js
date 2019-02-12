@@ -12,6 +12,10 @@ const cors = require('cors')
 app.use(cors())
 app.use(express.json())
 
+app.get('/', (req, res) => {
+    console.log('someone entered')
+})
+
 app.use('/users', userRouter)
 
 /*
