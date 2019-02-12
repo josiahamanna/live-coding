@@ -1,6 +1,8 @@
 const mongoose = require('moongoose')
 const { Schema } = mongoose.Schema
 
+const bcrypt = require('bcryptjs')
+
 mongoose.Pormise = global.Promise
 
 const userSchema = new Schema({
@@ -22,6 +24,20 @@ const userSchema = new Schema({
         enum: ['admin', 'user', 'moderator'],
         required: true,
         default: 'user'
+    }
+})
+
+userSchema.pre('save', function (next) {
+    if (this.isNew) {
+        bcrypt.genSalt(10)
+            .then(salt => bcrypt.hash(this.password, salt))
+            .then(hashedPassword => {
+                this.password = hashedPassword
+                next()
+            })
+            .catch(err => console.log(err))
+    } else {
+        next()
     }
 })
 
